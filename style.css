@@ -62,19 +62,36 @@ select {
     color: #084298;
 }
 
-.Required {
+.tag {
+    display: inline-block;
+    padding: 6px 12px;
+    margin: 4px;
+    border-radius: 20px;
+    font-size: 0.85em;
+    cursor: pointer;
+    background-color: #e7f1ff;
+    color: #0d6efd;
+    border: 1px solid #b6d4fe;
+    transition: all 0.2s ease;
+}
+
+.tag:hover {
+    background-color: #d0e4ff;
+    color: #084298;
+}
+.required {
     background: linear-gradient(to right, #ff4d4f, #ff7a45);
     color: #fff;
     border: none;
 }
 
-.Nice2Have {
+.nice2have {
     background: linear-gradient(to right, #ffc107, #ffe082);
     color: #212529;
     border: none;
 }
 
-.Ideal {
+.ideal {
     background: linear-gradient(to right, #ced4da, #dee2e6);
     color: #212529;
     border: none;
@@ -134,4 +151,22 @@ tr td[colspan="3"] {
 
 #modalClose:hover {
     color: #dc3545;
+}
+
+.highlight {
+    animation: glow 1.2s ease-in-out;
+    background-color: #ffe69c !important;
+    color: #000 !important;
+    font-weight: bold;
+    border-color: #ffca2c !important;
+}
+
+@keyframes glow {
+    0% { box-shadow: 0 0 0px #ffc107; }
+    50% { box-shadow: 0 0 10px #ffc107; }
+    100% { box-shadow: 0 0 0px #ffc107; }
+}
+.skill-colored {
+    color: #fff !important;
+    border: none !important;
 }
