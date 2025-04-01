@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Skill Matrix</title>
+    <link rel="stylesheet" href="./style.css">
+
+    
+</head>
+<body>
+
+<h1>Interactive Skill Matrix</h1>
+
+<div style="text-align:center;">
+    <label for="classificationFilter">Classification:</label>
+    <select id="classificationFilter" multiple>
+        <option value="Red Team">Red Team</option>
+        <option value="Blue Team">Blue Team</option>
+        <option value="GRC">GRC</option>
+        <option value="Unclassified">Unclassified</option>
+    </select>
+    <label for="roleFilter">Filter Roles:</label>
+    <select id="roleFilter" multiple></select>
+
+    <label for="importanceFilter">Skill Importance:</label>
+    <select id="importanceFilter" multiple>
+        <option value="Required for role">Required</option>
+        <option value="Nice to Have">Nice2Have</option>
+        <option value="In an ideal world">Ideal</option>
+    </select>
+    <label style="margin: 10px; display: inline-flex; align-items: center;">
+        <input type="checkbox" id="courseColorToggle" onchange="loadSkills()" style="margin-right: 6px;">
+        Highlight skill set by course
+    </label>
+    
+    
+    
+    
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>Role</th>
+            <th>Skill Set</th>
+            <th>Description</th>
+            <th>Related Courses</th>
+        </tr>
+    </thead>
+    
+    <tbody id="skillTableBody">
+    </tbody>
+</table>
+
+<script>
+    let skillData = [];
+    let educationMap = {};          // skill => course[]
+    let courseDetails = {};         // course => {description, outline}
+
+    // Tạo màu ngẫu nhiên theo tuần
+const gradientPalette = [
+    ["#0d6efd", "#66b2ff"],
+    ["#d63384", "#ff9dbb"],
+    ["#6f42c1", "#b19cd9"],
+    ["#fd7e14", "#ffb380"],
+    ["#198754", "#7ad1a6"],
+    ["#dc3545", "#f88379"],
+    ["#20c997", "#9df2d4"],
+    ["#6610f2", "#c39cfd"],
+    ["#e83e8c", "#ffbde0"],
+    ["#17a2b8", "#a5f1ff"]
+];
+
+
+
+
+    async function fetchSkillData() {
+        const [roleRes, eduRes] = await Promise.all([
+            fetch('role.json'),
+            fetch('education.json')
+        ]);
+
+        skillData = await roleRes.json();
+        
+        const rawEdu = await eduRes.json();
+
+        // Chuyển đổi thành cấu trúc courseDetails + educationMap
+        educationMap = {};
+        courseDetails = {};
+        courseColors = {};
+Object.keys(rawEdu).forEach((week, i) => {
+    const label = `${week} - ${rawEdu[week]["Chủ đề"]}`;
+    const [start, end] = gradientPalette[i % gradientPalette.length];
+    courseColors[label] = `linear-gradient(to right, ${start}, ${end})`;
+});
+
+
+        for (const [week, info] of Object.entries(rawEdu)) {
+            const label = `${week} - ${info["Chủ đề"]}`;
+
+            courseDetails[label] = {
+                description: `${info["Chủ đề"]} - ${info["Outline"][0] || ''}`,
+                outline: info["Outline"],
+                skills: info["Skill set"]
+            };
+
+            info["Skill set"].forEach(skill => {
+                if (!educationMap[skill]) educationMap[skill] = [];
+                educationMap[skill].push(label);
+            });
+        }
+
+
+
+        populateFilters();
+        loadSkills();
+    }
+    function populateFilters() {
+    const roleFilter = document.getElementById('roleFilter');
+    const classificationFilter = document.getElementById('classificationFilter');
+
+    // Populate classification filter (if not already)
+    if (classificationFilter.options.length === 0) {
+        const uniqueClassifications = [...new Set(skillData.map(item => item.classification))];
+        uniqueClassifications.forEach(cl => {
+            const option = document.createElement('option');
+            option.value = cl;
+            option.textContent = cl;
+            classificationFilter.appendChild(option);
+        });
+    }
+
+    // Populate role filter based on selected classifications
+    function updateRoleOptions() {
+        const selectedClassifications = Array.from(classificationFilter.selectedOptions).map(opt => opt.value);
+        roleFilter.innerHTML = '';
+
+        const filtered = skillData.filter(item =>
+            selectedClassifications.length === 0 || selectedClassifications.includes(item.classification)
+        );
+
+        const uniqueRoles = [...new Set(filtered.map(item => item.role))];
+        uniqueRoles.forEach(role => {
+            const option = document.createElement('option');
+            option.value = role;
+            option.textContent = role;
+            roleFilter.appendChild(option);
+        });
+    }
+
+    // Initial population of roles
+    updateRoleOptions();
+
+    // Event listeners
+    classificationFilter.addEventListener('change', () => {
+        updateRoleOptions();
+        loadSkills(); // reload data after filter updates
+    });
+
+    roleFilter.addEventListener('change', loadSkills);
+    document.getElementById('importanceFilter').addEventListener('change', loadSkills);
+}
+
+function highlightSkillsByClickedCourse(courseName) {
+    // Remove any previous highlights
+    document.querySelectorAll('.skill-tag').forEach(tag => tag.classList.remove('highlight'));
+
+    // Highlight skills associated with the clicked course
+    Object.entries(educationMap).forEach(([skill, courses]) => {
+        if (courses.includes(courseName)) {
+            document.querySelectorAll(`.skill-tag[data-skill="${skill}"]`).forEach(tag => {
+                tag.classList.add('highlight');
+            });
+        }
+    });
+}
+
+function highlightSkillsByCourse() {
+    // Highlight SKILL TAGS in column 2
+    document.querySelectorAll('.skill-tag[data-skill]').forEach(tag => {
+        const skillName = tag.getAttribute('data-skill');
+        if (!skillName || !educationMap[skillName]) return;
+
+        const courses = educationMap[skillName];
+        const courseColor = courseColors[courses[0]] || "#6c757d";
+
+        tag.style.background = courseColor;
+        tag.style.color = "#fff";
+        tag.classList.add('skill-colored');
+        tag.title = `Courses:\n${courses.join('\n')}`;
+    });
+
+    // Highlight COURSE TAGS in column 4
+    document.querySelectorAll('.course-tag').forEach(courseTag => {
+        tag.addEventListener('click', () => {
+    const course = tag.getAttribute('data-course');
+    const detail = courseDetails[course];
+    if (!detail) return;
+
+    document.getElementById('modalCourseTitle').textContent = course;
+    document.getElementById('modalCourseDesc').textContent = detail.description;
+    const outlineList = document.getElementById('modalCourseOutline');
+    outlineList.innerHTML = detail.outline.map(item => `<li>${item}</li>`).join('');
+    document.getElementById('courseModal').style.display = 'flex';
+});
+
+    });
+}
+
+function loadSkills() {
+        const selectedRoles = Array.from(document.getElementById('roleFilter').selectedOptions).map(opt => opt.value);
+        const selectedImportances = Array.from(document.getElementById('importanceFilter').selectedOptions).map(opt => opt.value);
+        const selectedClassifications = Array.from(document.getElementById('classificationFilter').selectedOptions).map(opt => opt.value);
+
+        const tbody = document.getElementById('skillTableBody');
+        tbody.innerHTML = '';
+
+        const grouped = {};
+
+        skillData.forEach(item => {
+            if (
+                (selectedRoles.length === 0 || selectedRoles.includes(item.role)) &&
+                (selectedClassifications.length === 0 || selectedClassifications.includes(item.classification))
+            ) {
+                if (!grouped[item.classification]) grouped[item.classification] = [];
+                grouped[item.classification].push(item);
+            }
+        });
+
+        Object.entries(grouped).forEach(([classification, roles]) => {
+            const groupRow = document.createElement('tr');
+            groupRow.innerHTML = `<td colspan="4" style="background:#333; color:#fff; font-weight:bold; text-align:left; padding:10px;">${classification}</td>`;
+            tbody.appendChild(groupRow);
+
+            roles.forEach(roleItem => {
+                const filteredSkills = selectedImportances.length ?
+                    roleItem.skills.filter(skill => selectedImportances.includes(skill.importance)) :
+                    roleItem.skills;
+
+                if (filteredSkills.length) {
+                    const courseColoring = document.getElementById('courseColorToggle').checked;
+
+                    const skillsHTML = filteredSkills.map(skillItem => {
+                        let style = '', className = '';
+
+                        if (courseColoring) {
+                            const courses = educationMap[skillItem.skill];
+                            const courseColor = courses && courseColors[courses[0]] ? courseColors[courses[0]] : "#6c757d";
+                            style = `background:${courseColor}; color:#fff;`;
+                        } else {
+                            if (skillItem.importance === "Required for role") className = 'required';
+                            else if (skillItem.importance === "Nice to Have") className = 'nice2have';
+                            else className = 'ideal';
+                        }
+
+                        return `<span class="skill-tag ${className}" style="${style}" data-skill="${skillItem.skill}" data-desc="${skillItem.description.replace(/"/g, '&quot;')}">${skillItem.skill}</span>`;
+                    }).join('');
+
+
+                    const courseTags = filteredSkills.flatMap(skill => educationMap[skill.skill] || []).sort();
+                    
+                    
+                    const courseHTML = [...new Set(courseTags)].map(c => {
+    const courseColor = courseColors[c] || "#adb5bd";
+    return `<span class="tag course-tag" style="background: ${courseColor}; color: #fff; cursor: pointer;" onclick="highlightSkillsByClickedCourse('${c}')"  data-course="${c}">${c}</span>`;
+}).join('');
+
+
+
+
+                    const row = document.createElement('tr');
+                    row.innerHTML += `<td>${roleItem.role}</td>`;
+                    row.innerHTML += `<td>${skillsHTML}</td>`;
+                    row.innerHTML += `<td>${roleItem.description}</td>`;
+                    row.innerHTML += `<td>${courseHTML}</td>`;
+                    tbody.appendChild(row);
+                }
+            });
+        });
+        
+        document.querySelectorAll('.skill-tag').forEach(tag => {
+            tag.addEventListener('click', () => {
+                document.getElementById('modalSkillTitle').textContent = tag.getAttribute('data-skill');
+                document.getElementById('modalSkillDesc').textContent = tag.getAttribute('data-desc');
+                document.getElementById('skillModal').style.display = 'flex';
+            });
+        });
+        document.querySelectorAll('.course-tag').forEach(tag => {
+            tag.addEventListener('click', () => {
+                const course = tag.getAttribute('data-course');
+                const detail = courseDetails[course];
+                if (!detail) return;
+
+                document.getElementById('modalCourseTitle').textContent = course;
+                document.getElementById('modalCourseDesc').textContent = detail.description;
+                const outlineList = document.getElementById('modalCourseOutline');
+                outlineList.innerHTML = detail.outline.map(item => `<li>${item}</li>`).join('');
+                document.getElementById('courseModal').style.display = 'flex';
+});
+
+});
+
+    }
+
+    
+
+
+// Modal close logic
+document.addEventListener('DOMContentLoaded', () => {
+    // document.getElementById('modalClose').onclick = () => {
+    //     document.getElementById('skillModal').style.display = 'none';
+    // };
+    // document.getElementById('courseModalClose').onclick = () => {
+    //     document.getElementById('courseModal').style.display = 'none';
+    // };
+    window.onclick = function(event) {
+        const cmodal = document.getElementById('courseModal');
+        if (event.target === cmodal) {
+            cmodal.style.display = 'none';
+        }
+    };
+    window.onclick = function(event) {
+        const modal = document.getElementById('skillModal');
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    };
+});
+
+    fetchSkillData();
+</script>
+<!-- Skill Description Modal -->
+<div id="skillModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:1000; align-items:center; justify-content:center;">
+    <div style="background:white; padding:20px; max-width:600px; width:90%; border-radius:10px; text-align:left; position:relative;">
+        <span id="modalClose" style="position:absolute; top:10px; right:15px; cursor:pointer; font-weight:bold;">&times;</span>
+        <h3 id="modalSkillTitle"></h3>
+        <p id="modalSkillDesc"></p>
+    </div>
+</div>
+
+<!-- <div id="courseModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:1000; align-items:center; justify-content:center;">
+    <div style="background:white; padding:20px; max-width:600px; width:90%; border-radius:10px; text-align:left; position:relative;">
+        <span id="courseModalClose" style="position:absolute; top:10px; right:15px; cursor:pointer; font-weight:bold;">&times;</span>
+        <h3 id="modalCourseTitle"></h3>
+        <p id="modalCourseDesc"></p>
+        <ul id="modalCourseOutline" style="padding-left: 1.2em;"></ul>
+    </div>
+</div> -->
+
+</body>
+</html>

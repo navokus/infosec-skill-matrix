@@ -1,0 +1,196 @@
+{
+    "1": {
+      "Chủ đề": "Networking & Protocol Fundamentals",
+      "Skill set": [
+        "Networking Basics",
+        "Network protocol fundamentals",
+        "Advanced Network Protocol Analysis"
+      ],
+      "Outline": [
+        "Kiến thức gốc: TCP/IP, DNS, HTTP, SSH",
+        "Phân tích Wireshark: traffic DNS, HTTP"
+      ],
+      "Phương pháp": [
+        "Thực hành bắt gói tin với Wireshark",
+        "→ Mục tiêu: Hiểu cấu trúc gói TCP/IP, HTTP, DNS — không chỉ \"xem traffic\".",
+        " Dựng 1 web server, 1 DNS server và cấu hình truy cập",
+        "→ Học cách các thành phần hoạt động với nhau.",
+        "Mô phỏng đăng nhập SSH và phân tích log xác thực",
+        "→ Đào sâu vào cách hệ thống xác minh người dùng."
+      ]
+    },
+    "2": {
+      "Chủ đề": "Web & Threat Fundamentals",
+      "Skill set": [
+        "Web App Basics",
+        "Web Protocol Basics",
+        "Exploit Development",
+        "Intrusion detection principles"
+      ],
+      "Outline": [
+        "Kiến thức gốc: malware, SQLi, phishing",
+        "Tấn công DVWA và phân tích log Apache",
+        "Trình bày kết quả + phản biện mô hình tấn công"
+      ],
+      "Phương pháp": [
+        "Phân tích một malware mẫu trong môi trường sandbox",
+        "→ Hiểu cách malware lây nhiễm, tự khởi động, kết nối C2.",
+        "Mô phỏng SQL Injection & khai thác thật trên DVWA (Damn Vulnerable Web App)",
+        "→ Không chỉ \"biết lỗi này tồn tại\", mà còn \"vì sao nó xảy ra\".",
+        "Tạo một email phishing nội bộ (lab)",
+        "→ Học cách tấn công và phòng thủ ở cấp con người."
+      ]
+    },
+    "3": {
+      "Chủ đề": "Log Analysis & SIEM Fundamentals",
+      "Skill set": [
+        "SIEM",
+        "Intrusion detection principles",
+        "Summary technical knowledge"
+      ],
+      "Outline": [
+        "Kiến thức gốc: log hệ thống, SIEM, detection logic",
+        "Phân tích brute-force từ log SSH (auth.log)",
+        "Báo cáo phân tích: dùng dữ liệu xác minh giả thuyết"
+      ],
+      "Phương pháp": [
+        "Phân tích log thực tế từ hệ thống bị brute-force",
+        "→ Tìm ra dấu hiệu, vẽ lại timeline tấn công.",
+        "Viết rule phát hiện trong Splunk / ELK",
+        " → Không dùng mẫu có sẵn, mà viết từ chính suy luận.",
+        "So sánh behavior của process bình thường vs. malware",
+        "→ Nhận diện \"bất thường\" trong hành vi hệ thống."
+      ]
+    },
+    "4": {
+      "Chủ đề": "Incident Response & Alert Investigation",
+      "Skill set": [
+        "SIEM",
+        "Reporting skills",
+        "Security-to-Business Integration"
+      ],
+      "Outline": [
+        "Kiến thức gốc: incident response lifecycle",
+        "Mô phỏng alert: đăng nhập bất thường từ IP lạ",
+        "Báo cáo xử lý + rút kinh nghiệm quy trình IR"
+      ],
+      "Phương pháp": [
+        "Mô phỏng toàn bộ một quy trình incident response",
+        "→ Nhận alert → phân tích → containment → report.",
+        "Áp dụng MITRE ATT&CK vào một attack mẫu",
+        " → Mapping tactic → technique → data source cần thiết.",
+        "Tập viết báo cáo phân tích kèm khuyến nghị cải thiện",
+        " → Không chỉ phát hiện, mà còn hiểu nghiệp vụ.",
+        " Thực hành phân tích root cause của một sự cố giả lập",
+        "→ Học cách không đổ lỗi mà tìm nguyên nhân sâu xa.",
+        "Cho log và hành vi bất thường → học viên đặt giả thuyết & kiểm tra",
+        "→ Tập tư duy điều tra ngược (backward investigation).",
+        "Thảo luận nhóm: cùng phân tích 1 tình huống thực tế",
+        "→ Cải thiện phản biện và đa góc nhìn."
+      ]
+    },
+    "5": {
+      "Chủ đề": "MITRE ATT&CK & Detection Engineering",
+      "Skill set": [
+        "Summary technical knowledge",
+        "Intrusion detection principles"
+      ],
+      "Outline": [
+        "Kiến thức gốc: MITRE ATT&CK framework",
+        "Mapping log tấn công với ATT&CK tactics & techniques",
+        "Trình bày mapping + đề xuất cải tiến giám sát"
+      ],
+      "Phương pháp": [
+        "Giải thích framework và ứng dụng",
+        "Thực hành mapping từ log thật",
+        "Thảo luận cải tiến detection từ ATT&CK"
+      ]
+    },
+    "6": {
+      "Chủ đề": "Threat Intelligence & IOC Hunting",
+      "Skill set": [
+        "OSINT",
+        "Intrusion detection principles",
+        "Advanced Network Protocol Analysis"
+      ],
+      "Outline": [
+        "Kiến thức gốc: threat intelligence, IOC",
+        "Phân tích phishing email + truy vết IOC",
+        "Rút ra nguyên lý săn IOC và enrich từ TI"
+      ],
+      "Phương pháp": [
+        "Giới thiệu TI, IOC, nguồn dữ liệu",
+        "Truy vết IOC từ email thật hoặc mẫu",
+        "Tổng kết cách săn IOC & enrich thông tin"
+      ]
+    },
+    "7": {
+      "Chủ đề": "Secure Infrastructure & Network Design",
+      "Skill set": [
+        "Infrastructure Basics",
+        "Principles of secure network design"
+      ],
+      "Outline": [
+        "Hạ tầng cơ bản & vai trò trong bảo mật",
+        "Thiết kế mạng an toàn (Secure Network Design)",
+        "Thảo luận nhóm + tổng kết nguyên tắc secure design"
+      ],
+      "Phương pháp": [
+        "Giải thích mô hình hệ thống IT, vẽ sơ đồ",
+        "Case-study: mô hình sai sót & đề xuất cải tiến",
+        "Phân tích và phản biện thiết kế mạng thật"
+      ]
+    },
+    "8": {
+      "Chủ đề": "SIEM Engineering & Advanced Detection",
+      "Skill set": [
+        "SIEM configuration and content management",
+        "Tool Development",
+        "Advanced Intrusion Detection techniques"
+      ],
+      "Outline": [
+        "SIEM nâng cao: content & correlation tuning",
+        "Tool development cơ bản cho phân tích & săn threat",
+        "Advanced intrusion detection techniques"
+      ],
+      "Phương pháp": [
+        "Lab: Viết use-case và triển khai rule",
+        "Thực hành viết Python script đơn giản",
+        "Tìm bất thường trong tập log lớn"
+      ]
+    },
+    "9": {
+      "Chủ đề": "Malware Analysis Basics",
+      "Skill set": [
+        "Basics of Static Analysis",
+        "Basic Dynamic Binary Analysis"
+      ],
+      "Outline": [
+        "Static Analysis cơ bản: phân tích mã độc/dữ liệu lạ",
+        "Dynamic Analysis cơ bản: theo dõi hành vi runtime",
+        "Kết hợp IOC từ mã độc với alert trong SIEM"
+      ],
+      "Phương pháp": [
+        "Dùng công cụ đọc mã nguồn, script nghi ngờ",
+        "Phân tích hành vi file nghi ngờ trong sandbox",
+        "Tạo rule SIEM theo IOC mới thu thập"
+      ]
+    },
+    "10": {
+      "Chủ đề": "Data Analysis & ML for SOC",
+      "Skill set": [
+        "Data Science and Advanced Data Analysis Techniques",
+        "Machine Learning"
+      ],
+      "Outline": [
+        "Data Analysis: từ log đến bất thường",
+        "Machine Learning trong detection",
+        "Kết nối kiến thức ML vào quy trình SOC"
+      ],
+      "Phương pháp": [
+        "Dùng Pandas hoặc Splunk để phát hiện pattern bất thường",
+        "Giới thiệu ML + thực hành anomaly detection đơn giản",
+        "Thảo luận: ML có giúp SOC Analyst tốt hơn không?"
+      ]
+    }
+  }

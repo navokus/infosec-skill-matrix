@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>Course Outline</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body {
+      background: #f5f7fa;
+      font-family: 'Segoe UI', sans-serif;
+      margin: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #0d6efd;
+    }
+
+    .course {
+      background: #fff;
+      border: 1px solid #dee2e6;
+      border-left: 6px solid #0d6efd;
+      padding: 16px 20px;
+      margin: 20px auto;
+      width: 90%;
+      max-width: 800px;
+      border-radius: 6px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+    }
+
+    .course h2 {
+      margin-top: 0;
+      color: #343a40;
+    }
+
+    .course h3 {
+      margin: 10px 0 5px;
+      font-size: 1em;
+      color: #495057;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 1.2em;
+    }
+
+    .skills {
+      margin-top: 10px;
+    }
+
+    .tag {
+      display: inline-block;
+      background: #e7f1ff;
+      color: #0d6efd;
+      border-radius: 20px;
+      padding: 4px 10px;
+      font-size: 0.9em;
+      margin: 2px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Course Outline</h1>
+<div id="courseContainer"></div>
+
+<script>
+  async function loadCourses() {
+    const res = await fetch('education.json');
+    const data = await res.json();
+    const container = document.getElementById('courseContainer');
+
+    Object.entries(data).sort((a, b) => Number(a[0]) - Number(b[0])).forEach(([week, detail]) => {
+      const title = `Module ${week} - ${detail["Chủ đề"]}`;
+      const block = document.createElement('div');
+      block.className = 'course';
+      block.innerHTML = `
+        <h2>${title}</h2>
+        <h3>Nội dung:</h3>
+        <ul>${detail.Outline.map(item => `<li>${item}</li>`).join('')}</ul>
+        <div class="method">
+          <h3>Phương pháp:</h3>
+          <ul>${detail["Phương pháp"].map(item => `<li>${item}</li>`).join('')}</ul>
+        </div>
+        <div class="skills">
+            
+          <h3>Kỹ năng:</h3>
+          ${detail["Skill set"].map(skill => `<span class="tag">${skill}</span>`).join('')}
+        </div>
+        
+      `;
+      container.appendChild(block);
+    });
+  }
+
+  loadCourses();
+</script>
+</body>
+</html>
