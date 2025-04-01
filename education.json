@@ -1,11 +1,14 @@
 {
     "1": {
-      "Chủ đề": "Networking & Protocol Fundamentals",
+      "Chủ đề": "Infrastructure, Networking & Protocol Fundamentals",
       "Skill set": [
         "Networking Basics",
         "Network protocol fundamentals",
-        "Advanced Network Protocol Analysis"
+        "Advanced Network Protocol Analysis",
+        "Infrastructure Basics",
+        "Principles of secure network design"
       ],
+      "CoreK" : ["TCP/IP", "DNS", "HTTP", "SSH"],
       "Outline": [
         "Kiến thức gốc: TCP/IP, DNS, HTTP, SSH",
         "Phân tích Wireshark: traffic DNS, HTTP"
@@ -21,6 +24,7 @@
     },
     "2": {
       "Chủ đề": "Web & Threat Fundamentals",
+      "CoreK" : ["malware", "SQLi", "phishing"],
       "Skill set": [
         "Web App Basics",
         "Web Protocol Basics",
@@ -43,6 +47,7 @@
     },
     "3": {
       "Chủ đề": "Log Analysis & SIEM Fundamentals",
+      "CoreK": ["log hệ thống", "SIEM", "detection logic"],
       "Skill set": [
         "SIEM",
         "Intrusion detection principles",
@@ -64,6 +69,7 @@
     },
     "4": {
       "Chủ đề": "Incident Response & Alert Investigation",
+      "CoreK": ["incident response lifecycle"],
       "Skill set": [
         "SIEM",
         "Reporting skills",
@@ -91,6 +97,7 @@
     },
     "5": {
       "Chủ đề": "MITRE ATT&CK & Detection Engineering",
+      "CoreK": ["MITRE ATT&CK framework"],
       "Skill set": [
         "Summary technical knowledge",
         "Intrusion detection principles"
@@ -108,6 +115,7 @@
     },
     "6": {
       "Chủ đề": "Threat Intelligence & IOC Hunting",
+      "CoreK": ["threat intelligence", "IOC"],
       "Skill set": [
         "OSINT",
         "Intrusion detection principles",
@@ -124,25 +132,45 @@
         "Tổng kết cách săn IOC & enrich thông tin"
       ]
     },
-    "7": {
-      "Chủ đề": "Secure Infrastructure & Network Design",
+    "7":{
+      "Chủ đề": "Malware Analysis Basics",
+      "CoreK": ["Malware"],
       "Skill set": [
-        "Infrastructure Basics",
-        "Principles of secure network design"
+        "Basics of Static Analysis",
+        "Basic Dynamic Binary Analysis"
       ],
       "Outline": [
-        "Hạ tầng cơ bản & vai trò trong bảo mật",
-        "Thiết kế mạng an toàn (Secure Network Design)",
-        "Thảo luận nhóm + tổng kết nguyên tắc secure design"
+        "Static Analysis cơ bản: phân tích mã độc/dữ liệu lạ",
+        "Dynamic Analysis cơ bản: theo dõi hành vi runtime",
+        "Kết hợp IOC từ mã độc với alert trong SIEM"
       ],
       "Phương pháp": [
-        "Giải thích mô hình hệ thống IT, vẽ sơ đồ",
-        "Case-study: mô hình sai sót & đề xuất cải tiến",
-        "Phân tích và phản biện thiết kế mạng thật"
+        "Dùng công cụ đọc mã nguồn, script nghi ngờ",
+        "Phân tích hành vi file nghi ngờ trong sandbox",
+        "Tạo rule SIEM theo IOC mới thu thập"
       ]
     },
     "8": {
+      "Chủ đề": "Data Analysis & ML for SOC",
+      "CoreK" : ["data analysis"],
+      "Skill set": [
+        "Data Science and Advanced Data Analysis Techniques",
+        "Machine Learning"
+      ],
+      "Outline": [
+        "Data Analysis: từ log đến bất thường",
+        "Machine Learning trong detection",
+        "Kết nối kiến thức ML vào quy trình SOC"
+      ],
+      "Phương pháp": [
+        "Dùng Pandas hoặc Splunk để phát hiện pattern bất thường",
+        "Giới thiệu ML + thực hành anomaly detection đơn giản",
+        "Thảo luận: ML có giúp SOC Analyst tốt hơn không?"
+      ]
+    },
+    "9": {
       "Chủ đề": "SIEM Engineering & Advanced Detection",
+      "CoreK": ["SIEM","Detection"],
       "Skill set": [
         "SIEM configuration and content management",
         "Tool Development",
@@ -159,38 +187,22 @@
         "Tìm bất thường trong tập log lớn"
       ]
     },
-    "9": {
-      "Chủ đề": "Malware Analysis Basics",
-      "Skill set": [
-        "Basics of Static Analysis",
-        "Basic Dynamic Binary Analysis"
-      ],
-      "Outline": [
-        "Static Analysis cơ bản: phân tích mã độc/dữ liệu lạ",
-        "Dynamic Analysis cơ bản: theo dõi hành vi runtime",
-        "Kết hợp IOC từ mã độc với alert trong SIEM"
-      ],
-      "Phương pháp": [
-        "Dùng công cụ đọc mã nguồn, script nghi ngờ",
-        "Phân tích hành vi file nghi ngờ trong sandbox",
-        "Tạo rule SIEM theo IOC mới thu thập"
-      ]
-    },
     "10": {
-      "Chủ đề": "Data Analysis & ML for SOC",
+      "Chủ đề": "Secure Infrastructure & Network Design",
+      "CoreK": ["System", "Network"],
       "Skill set": [
-        "Data Science and Advanced Data Analysis Techniques",
-        "Machine Learning"
+        "Infrastructure Basics",
+        "Principles of secure network design"
       ],
       "Outline": [
-        "Data Analysis: từ log đến bất thường",
-        "Machine Learning trong detection",
-        "Kết nối kiến thức ML vào quy trình SOC"
+        "Hạ tầng cơ bản & vai trò trong bảo mật",
+        "Thiết kế mạng an toàn (Secure Network Design)",
+        "Thảo luận nhóm + tổng kết nguyên tắc secure design"
       ],
       "Phương pháp": [
-        "Dùng Pandas hoặc Splunk để phát hiện pattern bất thường",
-        "Giới thiệu ML + thực hành anomaly detection đơn giản",
-        "Thảo luận: ML có giúp SOC Analyst tốt hơn không?"
+        "Giải thích mô hình hệ thống IT, vẽ sơ đồ",
+        "Case-study: mô hình sai sót & đề xuất cải tiến",
+        "Phân tích và phản biện thiết kế mạng thật"
       ]
     }
   }
