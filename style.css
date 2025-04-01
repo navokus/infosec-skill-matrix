@@ -1,0 +1,137 @@
+/* Modern Cybersecurity Skill Matrix Theme */
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 20px;
+    background-color: #f2f4f8;
+    color: #212529;
+}
+
+h1 {
+    text-align: center;
+    color: #1d3557;
+    margin-bottom: 10px;
+}
+
+table {
+    border-collapse: collapse;
+    width: 95%;
+    max-width: 1200px;
+    margin: 20px auto;
+    background-color: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+th, td {
+    border-bottom: 1px solid #dee2e6;
+    padding: 14px 16px;
+    text-align: center;
+}
+
+th {
+    background-color: #e9ecef;
+    font-weight: 600;
+    color: #343a40;
+}
+
+select {
+    padding: 10px;
+    margin: 10px;
+    border-radius: 6px;
+    border: 1px solid #ced4da;
+    background-color: #ffffff;
+    color: #343a40;
+}
+
+.skill-tag {
+    display: inline-block;
+    padding: 6px 12px;
+    margin: 4px;
+    border-radius: 20px;
+    font-size: 0.85em;
+    cursor: pointer;
+    background-color: #e7f1ff;
+    color: #0d6efd;
+    border: 1px solid #b6d4fe;
+    transition: all 0.2s ease;
+}
+
+.skill-tag:hover {
+    background-color: #d0e4ff;
+    color: #084298;
+}
+
+.Required {
+    background: linear-gradient(to right, #ff4d4f, #ff7a45);
+    color: #fff;
+    border: none;
+}
+
+.Nice2Have {
+    background: linear-gradient(to right, #ffc107, #ffe082);
+    color: #212529;
+    border: none;
+}
+
+.Ideal {
+    background: linear-gradient(to right, #ced4da, #dee2e6);
+    color: #212529;
+    border: none;
+}
+
+.basic {
+    background-color: #fefae0;
+    color: #b08900;
+    border: 1px solid #e0c100;
+}
+
+.advanced {
+    background-color: #e0f7f1;
+    color: #007f5f;
+    border: 1px solid #00b087;
+}
+
+tr td[colspan="3"] {
+    font-size: 1em;
+    background-color: #f1f3f5;
+    color: #343a40;
+    text-align: left;
+    padding: 12px 16px;
+    font-weight: 500;
+}
+
+#skillModal {
+    background: rgba(0,0,0,0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 1000;
+}
+
+#skillModal > div {
+    background: #ffffff;
+    padding: 24px;
+    max-width: 600px;
+    width: 90%;
+    border-radius: 10px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    position: relative;
+    color: #212529;
+}
+
+#modalClose {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    font-size: 20px;
+    color: #6c757d;
+    cursor: pointer;
+}
+
+#modalClose:hover {
+    color: #dc3545;
+}

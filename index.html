@@ -4,71 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interactive Skill Matrix</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f4f7fa;
-        }
-        h1 {
-            text-align: center;
-        }
-        table {
-            border-collapse: collapse;
-            width: 90%;
-            max-width: 1000px;
-            margin: 20px auto;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            background-color: #fff;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: center;
-            vertical-align: middle;
-        }
-        th {
-            background-color: #007BFF;
-            color: white;
-        }
-        .skill-tag {
-            display: inline-block;
-            padding: 5px 10px;
-            margin: 3px;
-            border-radius: 15px;
-            color: white;
-            cursor: pointer;
-        }
-        .required {
-            background-color: #17a2b8;
-        }
-        .nice2have {
-            background-color: #28a745;
-        }
-        .ideally {
-            background-color: #96c14d;
-        }
-        select {
-            padding: 8px;
-            margin: 10px;
-        }
-    </style>
+    <link rel="stylesheet" href="./style.css">
+
+    
 </head>
 <body>
 
 <h1>Interactive Skill Matrix</h1>
 
 <div style="text-align:center;">
-    <label for="roleFilter">Filter Roles:</label>
-    <select id="roleFilter" multiple>
+    <label for="classificationFilter">Classification:</label>
+    <select id="classificationFilter" multiple>
+        <option value="Red Team">Red Team</option>
+        <option value="Blue Team">Blue Team</option>
+        <option value="GRC">GRC</option>
+        <option value="Unclassified">Unclassified</option>
     </select>
+    <label for="roleFilter">Filter Roles:</label>
+    <select id="roleFilter" multiple></select>
 
     <label for="importanceFilter">Skill Importance:</label>
     <select id="importanceFilter" multiple>
-        <option value="required">Required for role</option>
-        <option value="nice2have">Nice to Have</option>
-        <option value="ideally">In an ideal world</option>
+        <option value="Required">Required</option>
+        <option value="Nice2Have">Nice2Have</option>
+        <option value="Ideal">Ideal</option>
     </select>
+
+    
 </div>
 
 <table>
@@ -90,37 +52,91 @@
         populateFilters();
         loadSkills();
     }
-      function populateFilters() {
-        const roleFilter = document.getElementById('roleFilter');
-        roleFilter.innerHTML = '';
-        skillData.forEach(item => {
-            const option = document.createElement('option');
-            option.value = item.role;
-            option.textContent = item.role;
-            roleFilter.appendChild(option);
-        });
+    function populateFilters() {
+    const roleFilter = document.getElementById('roleFilter');
+    const classificationFilter = document.getElementById('classificationFilter');
 
-        roleFilter.addEventListener('change', loadSkills);
-        document.getElementById('importanceFilter').addEventListener('change', loadSkills);
+    // Populate classification filter (if not already)
+    if (classificationFilter.options.length === 0) {
+        const uniqueClassifications = [...new Set(skillData.map(item => item.classification))];
+        uniqueClassifications.forEach(cl => {
+            const option = document.createElement('option');
+            option.value = cl;
+            option.textContent = cl;
+            classificationFilter.appendChild(option);
+        });
     }
 
+    // Populate role filter based on selected classifications
+    function updateRoleOptions() {
+        const selectedClassifications = Array.from(classificationFilter.selectedOptions).map(opt => opt.value);
+        roleFilter.innerHTML = '';
+
+        const filtered = skillData.filter(item =>
+            selectedClassifications.length === 0 || selectedClassifications.includes(item.classification)
+        );
+
+        const uniqueRoles = [...new Set(filtered.map(item => item.role))];
+        uniqueRoles.forEach(role => {
+            const option = document.createElement('option');
+            option.value = role;
+            option.textContent = role;
+            roleFilter.appendChild(option);
+        });
+    }
+
+    // Initial population of roles
+    updateRoleOptions();
+
+    // Event listeners
+    classificationFilter.addEventListener('change', () => {
+        updateRoleOptions();
+        loadSkills(); // reload data after filter updates
+    });
+
+    roleFilter.addEventListener('change', loadSkills);
+    document.getElementById('importanceFilter').addEventListener('change', loadSkills);
+}
+
+
     function loadSkills() {
-        const selectedRoles = Array.from(document.getElementById('roleFilter').selectedOptions).map(opt => opt.value);
-        const selectedImportances = Array.from(document.getElementById('importanceFilter').selectedOptions).map(opt => opt.value);
+    const selectedRoles = Array.from(document.getElementById('roleFilter').selectedOptions).map(opt => opt.value);
+    const selectedImportances = Array.from(document.getElementById('importanceFilter').selectedOptions).map(opt => opt.value);
+    const selectedClassifications = Array.from(document.getElementById('classificationFilter').selectedOptions).map(opt => opt.value);
 
-        const tbody = document.getElementById('skillTableBody');
-        tbody.innerHTML = '';
+    const tbody = document.getElementById('skillTableBody');
+    tbody.innerHTML = '';
 
-        const filteredData = selectedRoles.length ? skillData.filter(item => selectedRoles.includes(item.role)) : skillData;
+    // Group roles by classification
+    const grouped = {};
 
-        filteredData.forEach(roleItem => {
-            const filteredSkills = selectedImportances.length ? 
+    skillData.forEach(item => {
+        if (
+            (selectedRoles.length === 0 || selectedRoles.includes(item.role)) &&
+            (selectedClassifications.length === 0 || selectedClassifications.includes(item.classification))
+        ) {
+            if (!grouped[item.classification]) {
+                grouped[item.classification] = [];
+            }
+            grouped[item.classification].push(item);
+        }
+    });
+
+    Object.entries(grouped).forEach(([classification, roles]) => {
+        // Add group header row
+        const groupRow = document.createElement('tr');
+        groupRow.innerHTML = `<td colspan="3" style="background:#333; color:#fff; font-weight:bold; text-align:left; padding:10px;">${classification}</td>`;
+        tbody.appendChild(groupRow);
+
+        // Add role rows
+        roles.forEach(roleItem => {
+            const filteredSkills = selectedImportances.length ?
                 roleItem.skills.filter(skill => selectedImportances.includes(skill.importance)) :
                 roleItem.skills;
 
             if (filteredSkills.length) {
-                const skillsHTML = filteredSkills.map(skillItem => 
-                    `<span class="skill-tag ${skillItem.importance}" title="${skillItem.description}">${skillItem.skill}</span>`
+                const skillsHTML = filteredSkills.map(skillItem =>
+                    `<span class="skill-tag ${skillItem.importance}" data-skill="${skillItem.skill}" data-desc="${skillItem.description.replace(/"/g, '&quot;')}">${skillItem.skill}</span>`
                 ).join('');
 
                 const row = document.createElement('tr');
@@ -129,11 +145,43 @@
                 row.innerHTML += `<td>${roleItem.description}</td>`;
                 tbody.appendChild(row);
             }
-            
         });
-    }
+    });
+
+    // Add modal triggers
+    document.querySelectorAll('.skill-tag').forEach(tag => {
+        tag.addEventListener('click', () => {
+            document.getElementById('modalSkillTitle').textContent = tag.getAttribute('data-skill');
+            document.getElementById('modalSkillDesc').textContent = tag.getAttribute('data-desc');
+            document.getElementById('skillModal').style.display = 'flex';
+        });
+    });
+
+
+}
+
+// Modal close logic
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('modalClose').onclick = () => {
+        document.getElementById('skillModal').style.display = 'none';
+    };
+    window.onclick = function(event) {
+        const modal = document.getElementById('skillModal');
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    };
+});
+
     fetchSkillData();
 </script>
-
+<!-- Skill Description Modal -->
+<div id="skillModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:1000; align-items:center; justify-content:center;">
+    <div style="background:white; padding:20px; max-width:600px; width:90%; border-radius:10px; text-align:left; position:relative;">
+        <span id="modalClose" style="position:absolute; top:10px; right:15px; cursor:pointer; font-weight:bold;">&times;</span>
+        <h3 id="modalSkillTitle"></h3>
+        <p id="modalSkillDesc"></p>
+    </div>
+</div>
 </body>
 </html>
